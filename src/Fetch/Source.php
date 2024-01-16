@@ -94,11 +94,11 @@ final readonly class Source
 
         $versions = [];
 
-        foreach ($matches as $version) {
+        foreach (array_reverse($matches) as $version) {
             $versions[] = new Version(
-                $version['number'],
+                trim($version['number']),
                 substr($version['date'], 0, 10),
-                $version['description'],
+                trim($version['description']),
             );
         }
 

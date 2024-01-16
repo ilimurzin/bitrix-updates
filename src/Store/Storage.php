@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Store;
 
 use App\Entity\Module;
+use App\Entity\SentVersion;
 use App\Entity\Version;
 use App\Fetch\ModuleVersions;
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,5 +65,31 @@ final class Storage
         }
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @return Version[]
+     */
+    public function getUnsent(): array
+    {
+        return $this->entityManager->createQuery(
+            <<<'DQL'
+SELECT version
+FROM App\Entity\Version version
+WHERE NOT EXISTS (SELECT sentVersion FROM App\Entity\SentVersion sentVersion WHERE sentVersion.version = version.id)
+ORDER BY version.id
+DQL
+        )->getResult();
+    }
+
+    public function markAsSent(Version $version): void
+    {
+        $sentVersion = new SentVersion();
+        $sentVersion->setVersion($version);
+        $sentVersion->setSent(new \DateTimeImmutable());
+
+        $this->entityManager->persist($sentVersion);
+        $this->entityManager->flush();
+        $this->entityManager->detach($sentVersion);
     }
 }

@@ -92,4 +92,19 @@ DQL
         $this->entityManager->flush();
         $this->entityManager->detach($sentVersion);
     }
+
+    public function markAllAsSent(): int
+    {
+        $sql = <<<'SQL'
+INSERT INTO sent_version (version_id, sent)
+SELECT id, ?
+FROM version
+WHERE id NOT IN (SELECT version_id FROM sent_version)
+SQL;
+
+        $statement = $this->entityManager->getConnection()->prepare($sql);
+        $statement->bindValue(1, new \DateTimeImmutable(), 'datetime');
+
+        return $statement->executeStatement();
+    }
 }

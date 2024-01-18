@@ -27,7 +27,7 @@ final readonly class Source
         );
 
         if ($response->getStatusCode() !== 200) {
-            throw new \RuntimeException();
+            throw new \RuntimeException('Failure fetching versions ' . $response->getStatusCode());
         }
 
         $content = $response->getContent();
@@ -38,7 +38,7 @@ final readonly class Source
             $matches
         );
 
-        $ajaxId = $matches[1] ?? throw new \RuntimeException();
+        $ajaxId = $matches[1] ?? throw new \RuntimeException('No ajaxId found');
 
         preg_match_all(
             '/<a (.*?)>(?<title>.*?)<\/a> \((?<code>[a-z]*?)\)/',
@@ -72,7 +72,7 @@ final readonly class Source
         );
 
         if ($response->getStatusCode() !== 200) {
-            throw new \RuntimeException();
+            throw new \RuntimeException("Failure fetching module $moduleCode versions " . $response->getStatusCode());
         }
 
         $content = $response->getContent();

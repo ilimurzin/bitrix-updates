@@ -41,21 +41,23 @@ final class SendNotificationsCommand extends Command
 
         $unsentVersions = $this->storage->getUnsent();
 
-        if ($input->getOption('dry-run')) {
+        if (!$input->getOption('dry-run')) {
+            foreach ($unsentVersions as $version) {
+                $this->notificator->notify($version);
+
+                $this->storage->markAsSent($version);
+            }
+        }
+
+        if (count($unsentVersions)) {
             $io->success(
                 sprintf(
-                    'There are %d unsent versions',
+                    'Notified about %d new versions',
                     count($unsentVersions)
                 )
             );
-
-            return Command::SUCCESS;
-        }
-
-        foreach ($unsentVersions as $version) {
-            $this->notificator->notify($version);
-
-            $this->storage->markAsSent($version);
+        } else {
+            $io->success('No new versions');
         }
 
         return Command::SUCCESS;

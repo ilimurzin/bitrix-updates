@@ -39,18 +39,16 @@ final class MarkAllVersionsAsSentCommand extends Command
 
         $unsentVersions = $this->storage->getUnsent();
 
-        if ($input->getOption('dry-run')) {
-            $io->success(
-                sprintf(
-                    'There are %d unsent versions',
-                    count($unsentVersions)
-                )
-            );
-
-            return Command::SUCCESS;
+        if (!$input->getOption('dry-run')) {
+            $this->storage->markAllAsSent();
         }
 
-        $this->storage->markAllAsSent();
+        $io->success(
+            sprintf(
+                'Marked %d versions as sent',
+                count($unsentVersions)
+            )
+        );
 
         return Command::SUCCESS;
     }

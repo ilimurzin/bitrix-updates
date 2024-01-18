@@ -42,26 +42,24 @@ final class GetVersionsCommand extends Command
 
         $modulesVersions = $this->source->fetchModulesVersions();
 
-        if ($input->getOption('dry-run')) {
-            $io->success(
-                sprintf(
-                    'Fetched %d versions for %d modules',
-                    array_sum(
-                        array_map(
-                            function (ModuleVersions $moduleVersions) {
-                                return count($moduleVersions->versions);
-                            },
-                            $modulesVersions
-                        )
-                    ),
-                    count($modulesVersions),
-                )
-            );
-
-            return Command::SUCCESS;
+        if (!$input->getOption('dry-run')) {
+            $this->storage->store($modulesVersions);
         }
 
-        $this->storage->store($modulesVersions);
+        $io->success(
+            sprintf(
+                'Fetched %d versions for %d modules',
+                array_sum(
+                    array_map(
+                        function (ModuleVersions $moduleVersions) {
+                            return count($moduleVersions->versions);
+                        },
+                        $modulesVersions
+                    )
+                ),
+                count($modulesVersions),
+            )
+        );
 
         return Command::SUCCESS;
     }

@@ -3,8 +3,8 @@
 ## Описание
 
 Бот,
-который отслеживает изменения на странице https://dev.1c-bitrix.ru/docs/versions.php
-и публикует в канал https://t.me/BitrixUpdates
+который отслеживает изменения на [странице истории версий](https://dev.1c-bitrix.ru/docs/versions.php)
+и публикует в [телеграм-канал](https://t.me/BitrixUpdates).
 
 ## Установка
 

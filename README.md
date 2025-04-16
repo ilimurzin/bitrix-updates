@@ -36,6 +36,6 @@ php bin/console doctrine:migrations:migrate
 
 ```sh
 #!/bin/sh
-/opt/php82/bin/php ~/bitrix-updates/bin/console app:get-versions
-/opt/php82/bin/php ~/bitrix-updates/bin/console app:send-notifications
+/opt/php82/bin/php ~/bitrix-updates/bin/console app:get-versions > /dev/null
+/opt/php82/bin/php ~/bitrix-updates/bin/console app:send-notifications > /dev/null
 ```

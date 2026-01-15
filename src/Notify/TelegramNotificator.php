@@ -32,7 +32,13 @@ final class TelegramNotificator
         );
 
         if ($response->getStatusCode() !== 200) {
-            throw new \RuntimeException('sendMessage failure ' . $response->getContent(false));
+            if ($response->getStatusCode() === 429) {
+                sleep(60);
+
+                $this->notify($version);
+            } else {
+                throw new \RuntimeException('sendMessage failure ' . $response->getContent(false));
+            }
         }
     }
 }
